@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Help{% endblock %}
+
+{% block mycontent %}
+
+<h1 class="page-header">How does it work?</h1>
+
+
+<p>It's really simple! We use the following formulas during a transaction:</p>
+
+<p>
+$$\text{balance}_{\text{sender}} = \text{balance}_{\text{sender}} - \text{amount}$$
+$$\text{balance}_{\text{receiver}} = \text{balance}_{\text{receiver}} + \text{amount}$$
+</p>
+
+<p>
+And the source code is also very simple!
+</p>
+
+<pre><code class="hljs python">
+def perform_transaction(sender, receiver, amount):
+    accounts[sender]['balance'] -= amount
+    accounts[receiver]['balance'] += amount
+</code></pre>
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+        type="text/javascript">
+        </script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/default.min.css">
+{% endblock %}

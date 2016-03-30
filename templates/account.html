@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}Account Status{% endblock %}
+
+{% block mycontent %}
+
+<h1 class="page-header">Account Status</h1>
+
+<p>Welcome, {{ user['name'] }}</p>
+
+<h3 class="sub-header">Account Balance: {{ user['balance'] }} $</h3>
+
+<h2 class="sub-header">Transactions</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Other</th>
+                <th>Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+    {% for t in user['transactions'] %}
+        <tr>
+            <td>{{ t['type'] }}</td>
+            <td>{{ t['who'] }}</td>
+            <td>{{ t['amount'] }} $</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<p>
+<a class="btn btn-lg btn-primary"
+   href="{{ url_for('transfer_moneyz', username=username) }}"
+   role="button">
+   Transfer Money
+</a>
+</p>
+{% endblock %}
