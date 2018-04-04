@@ -10,35 +10,32 @@
 
 <h3 class="sub-header">Account Balance: {{ user['balance'] }} $</h3>
 
-<h2 class="sub-header">Transactions</h2>
 
+<p>
+  <a class="btn btn-lg btn-primary"
+     href="{{ url_for('transfer_moneyz', username=username) }}"
+     role="button">
+     Transfer Money
+  </a>
+</p>
+
+<h2 class="sub-header">Other Users</h2>
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>Type</th>
-                <th>Other</th>
-                <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-    {% for t in user['transactions'] %}
         <tr>
-            <td>{{ t['type'] }}</td>
-            <td>{{ t['who'] }}</td>
-            <td>{{ t['amount'] }} $</td>
+            <th>User</th>
+            <th>Balance</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for t in user['user_list'] %}
+                <tr>
+                    <td>{{ t['user'] }}</td>
+                    <td>{{ t['balance'] }} $</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-
-
-<p>
-<a class="btn btn-lg btn-primary"
-   href="{{ url_for('transfer_moneyz', username=username) }}"
-   role="button">
-   Transfer Money
-</a>
-</p>
 {% endblock %}

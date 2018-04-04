@@ -132,6 +132,29 @@ def get_user_id(mysql, user):
         return None
 
 
+def get_user_balance_list(mysql, user_id):
+    try:
+        cur = mysql.connection.cursor()
+
+        print("before get user balance list sql query", flush=True)
+        cur.execute("SELECT user, balance FROM users WHERE id!=%s;", (str(user_id), ))
+        print("after  get user balance list sql query", flush=True)
+
+        result = cur.fetchall()
+        user_list = []
+
+        for r in result:
+            account = dict()
+            account['user'] = r[0]
+            account['balance'] = r[1]
+            user_list.append(account)
+
+        return user_list
+    except Exception as e:
+        print(e, flush=True)
+        return None
+
+
 def get_session_token(mysql, user_id):
     try:
         cur = mysql.connection.cursor()

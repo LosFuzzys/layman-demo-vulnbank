@@ -1,6 +1,6 @@
 # flask & general app stuff
 from flask import current_app, render_template, Markup, make_response
-from iron_bank import db, utils
+from iron_bank import account, db, utils
 
 
 def provide_form(msg=""):
@@ -65,14 +65,23 @@ def handle(request, mysql):
     if balance is None:
         return provide_form("Problem while getting data. Please contact an administrator.")
 
-    account = dict()
-    account['name'] = user
-    account['balance'] = balance
+    # 4. get other users
+
+    #[{'user': 'jsnowddd', 'balance': 100}, {'user': 'dstormbornbbb', 'balance': 100}]
+    user_list = db.get_user_balance_list(mysql, id)
+    print("user_list from db: ", user_list)
+    if user_list is None:
+        return provide_form("Problem while getting data. Please contact an administrator.")
+
+    user_dict = dict()
+    user_dict['name'] = user
+    user_dict['balance'] = balance
+    user_dict['user_list'] = user_list
 
     cookie = utils.generate_cookie(id, token)
 
     # 3. navigate to account page
-    response = make_response(render_template('account.html', user=account))
+    response = make_response(account.provide_form(account=user_dict))
     response.set_cookie(current_app.config['COOKIE_NAME'], cookie, httponly=True)
 
     return response
