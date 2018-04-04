@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+
+  app:
+    build: .
+    container_name: iron_bank_app
+    volumes:
+      - ../src/:/src
+    ports:
+      - 81:5555
+    links:
+      - db
+
+  db:
+    image: mariadb
+    container_name: iron_bank_mariadb
+    #restart: always
+    volumes:
+      - ./iron_bank.sql:/docker-entrypoint-initdb.d/iron_bank.sql
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 1amR00t! 
+      MYSQL_DATABASE: iron_bank 

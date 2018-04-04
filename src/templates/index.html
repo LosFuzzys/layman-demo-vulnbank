@@ -4,7 +4,7 @@
 
 {% block mycontent %}
 
-<h1 class="page-header">Welcome to Paypoop</h1>
+<h1 class="page-header">Welcome to the Iron Bank</h1>
 
 <div class="jumbotron">
   <h1>Easily Transfer Money</h1>
@@ -12,10 +12,10 @@
   Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut
   fermentum massa justo sit amet risus.</p>
   <div>
-  <p>
-    <a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a>
-  <a class="btn btn-lg btn-primary" href="{{ url_for('login') }}"
-  role="button">Sign In</a></p>
+    <p>
+      <a class="btn btn-lg btn-success" href="{{ url_for('register') }}" role="button">Register today</a>
+      <a class="btn btn-lg btn-primary" href="{{ url_for('login') }}" role="button">Login</a>
+    </p>
   </div>
 </div>
 

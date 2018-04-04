@@ -1,13 +1,25 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim: set fileencoding=utf-8
 
-from __future__ import print_function
-
 from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
+from flask_mysqldb import MySQL
+from iron_bank import registration, login
 
 app = Flask(__name__)
 Bootstrap(app)
+
+# IP address of Docker service or name of the Docker service's name, when in the same network
+app.config['MYSQL_HOST'] = 'db'
+app.config['MYSQL_PORT'] = 3306
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '1amR00t!'
+app.config['MYSQL_DB'] = 'iron_bank'
+
+app.config['COOKIE_NAME'] = 'iron_session'
+
+mysql = MySQL(app)
 
 accounts = {'jdoe': {'name': 'John Doe',
                      'balance': 100,
@@ -50,6 +62,14 @@ def logout():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return registration.provide_form()
+    else:
+        return registration.handle(request, mysql)
 
 
 @app.route('/account', methods=["GET", "POST"])
@@ -96,4 +116,4 @@ def help():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5555)
