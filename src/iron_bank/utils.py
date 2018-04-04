@@ -6,7 +6,7 @@ from iron_bank import db
 # helper stuff
 import re
 import os
-import pickle
+import json
 import hashlib
 from base64 import b64encode as b64e, b64decode as b64d
 
@@ -62,14 +62,14 @@ def check_session(request, mysql):
         return None
 
     try:
-        cookie_dict = pickle.loads(b64d(cookie))
+        cookie_dict = json.loads(b64d(cookie).decode('utf-8'))
         user_id = cookie_dict['id']
-        token   = cookie_dict['token']
+        token = cookie_dict['token']
     except Exception as e:
         print(e, flush=True)
         return None
 
-    if not check_user_id(str(user_id)):
+    if (user_id is None) or (token is None) or (not check_user_id(str(user_id))):
         return None
 
     token_db = db.get_session_token(mysql, user_id)
@@ -82,15 +82,6 @@ def check_session(request, mysql):
     return user_id
 
 
-def get_file_path(fname, folder):
-    file_path = os.path.join(folder, fname)
-
-    if not file_path.startswith(folder):
-        file_path = None
-
-    return file_path
-
-
 def get_hash(hinput):
     h = hashlib.sha256()
     h.update(hinput.encode('utf-8'))
@@ -100,7 +91,7 @@ def get_hash(hinput):
 
 
 def generate_session_token():
-    token_bytes = os.urandom(2)
+    token_bytes = os.urandom(16)
     return token_bytes.hex().lower()
 
 
@@ -111,9 +102,5 @@ def generate_cookie(id, token):
 
     print("cookie: ", cookie_dict, flush=True)
 
-    cookie = b64e(pickle.dumps(cookie_dict))
+    cookie = b64e(json.dumps(cookie_dict).encode('utf-8'))
     return cookie
-
-
-def file_exists(file_path):
-    return os.path.exists(file_path)

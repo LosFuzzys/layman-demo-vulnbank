@@ -5,7 +5,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_mysqldb import MySQL
-from iron_bank import registration, login
+from iron_bank import registration, login_bank
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -72,8 +72,16 @@ def register():
         return registration.handle(request, mysql)
 
 
-@app.route('/account', methods=["GET", "POST"])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        return login_bank.provide_form()
+    else:
+        return login_bank.handle(request, mysql)
+
+
+@app.route('/account', methods=['GET', 'POST'])
+def account():
     error = None
     if request.method == "POST":
         if request.form['user'] and request.form['user'] in accounts:
