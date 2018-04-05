@@ -130,7 +130,7 @@ def get_user_account_dict(mysql, user_id):
         return None
 
     # 3. get other users
-    user_list = db.get_user_balance_list(mysql, id)
+    user_list = db.get_user_balance_list(mysql, user_id)
     print("user_list from db: ", user_list, flush=True)
     if user_list is None:
         return None
