@@ -13,6 +13,7 @@ from base64 import b64encode as b64e, b64decode as b64d
 REGEX_USER     = "^[0-9a-zA-Z_]{4,50}$"
 REGEX_PWD      = "^[0-9a-zA-Z_]{4,100}$"
 REGEX_USER_ID  = "^[0-9]+$"
+REGEX_TRANSFER_AMOUNT = "^[0-9\-]+$"
 
 
 def check_user(name):
@@ -31,6 +32,13 @@ def check_pwd(pwd):
 
 def check_user_id(user_id):
     if not re.match(REGEX_USER_ID, user_id):
+        return False
+
+    return True
+
+
+def check_transfer_amount(amount):
+    if not re.match(REGEX_TRANSFER_AMOUNT, amount):
         return False
 
     return True
@@ -123,7 +131,7 @@ def get_user_account_dict(mysql, user_id):
 
     # 3. get other users
     user_list = db.get_user_balance_list(mysql, id)
-    print("user_list from db: ", user_list)
+    print("user_list from db: ", user_list, flush=True)
     if user_list is None:
         return None
 

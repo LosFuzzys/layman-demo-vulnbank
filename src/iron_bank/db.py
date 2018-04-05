@@ -197,6 +197,21 @@ def get_session_token(mysql, user_id):
         return None
 
 
+def set_balance(mysql, user, balance):
+    try:
+        cur = mysql.connection.cursor()
+
+        print("before setting new balance sql query", flush=True)
+        cur.execute("UPDATE users SET balance=%s WHERE user=%s;", (str(balance), user))
+        print("after  setting new balance sql query", flush=True)
+
+        mysql.connection.commit()
+        return True
+    except Exception as e:
+        print(e, flush=True)
+        return False
+
+
 def delete_session(mysql, user_id):
     try:
         cur = mysql.connection.cursor()

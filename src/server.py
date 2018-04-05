@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim: set fileencoding=utf-8
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, make_response
 from flask_bootstrap import Bootstrap
 from flask_mysqldb import MySQL
 from iron_bank import registration, login_bank, account_bank, utils
@@ -61,7 +61,12 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # 0. check session
+    user_id = utils.check_session(request, mysql)
+    if user_id is None:
+        return render_template('index.html')
+
+    return redirect(url_for('account'))
 
 
 @app.route('/register', methods=['GET', 'POST'])

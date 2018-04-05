@@ -1,5 +1,5 @@
 # flask & general app stuff
-from flask import current_app, render_template, Markup, make_response
+from flask import current_app, render_template, Markup, make_response, redirect, url_for
 from iron_bank import account_bank, db, utils
 
 
@@ -67,7 +67,8 @@ def handle(request, mysql):
         return provide_form("Problem while getting data. Please contact an administrator.")
 
     # 4. navigate to account page
-    response = make_response(account_bank.provide_form_overview(account=user_dict))
+    #response = make_response(account_bank.provide_form_overview(account=user_dict))
+    response = make_response(redirect(url_for('account')))
     response.set_cookie(current_app.config['COOKIE_NAME'], cookie, httponly=True)
 
     return response
