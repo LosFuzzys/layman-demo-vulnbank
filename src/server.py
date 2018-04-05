@@ -5,7 +5,7 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from flask_bootstrap import Bootstrap
 from flask_mysqldb import MySQL
-from iron_bank import registration, login_bank, account_bank, utils
+from iron_bank import db, registration, login_bank, account_bank, utils
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -21,45 +21,49 @@ app.config['COOKIE_NAME'] = 'iron_session'
 
 mysql = MySQL(app)
 
-accounts = {'jdoe': {'name': 'John Doe',
-                     'balance': 100,
-                     'transactions': [
-                         {'type': 'from', 'who': "Big Mama Doe", 'amount': 100}
-                     ]
-                     },
-            'mmustermann': {'name': 'Max Mustermann',
-                            'balance': 100000000,
-                            'transactions': [
-                                {'type': 'from', 'who': 'Employer',
-                                    'amount': 3000},
-                                {'type': 'to', 'who': 'Landlord',
-                                    'amount': 1200},
-                                {'type': 'to', 'who': 'Money Launderer',
-                                    'amount': 5000},
-                            ]
-                            }
-            }
+# accounts = {'jdoe': {'name': 'John Doe',
+#                      'balance': 100,
+#                      'transactions': [
+#                          {'type': 'from', 'who': "Big Mama Doe", 'amount': 100}
+#                      ]
+#                      },
+#             'mmustermann': {'name': 'Max Mustermann',
+#                             'balance': 100000000,
+#                             'transactions': [
+#                                 {'type': 'from', 'who': 'Employer',
+#                                     'amount': 3000},
+#                                 {'type': 'to', 'who': 'Landlord',
+#                                     'amount': 1200},
+#                                 {'type': 'to', 'who': 'Money Launderer',
+#                                     'amount': 5000},
+#                             ]
+#                             }
+#             }
+#
+#
+# def perform_transaction(sender, receiver, amount):
+#
+#     accounts[sender]['balance'] -= amount
+#     accounts[receiver]['balance'] += amount
+#
+#     accounts[sender]['transactions'].append({'type': 'to',
+#                                              'who': receiver,
+#                                              'amount': amount})
+#     accounts[receiver]['transactions'].append({'type': 'from',
+#                                                'who': sender,
+#                                                'amount': amount})
 
 
-def perform_transaction(sender, receiver, amount):
-
-    accounts[sender]['balance'] -= amount
-    accounts[receiver]['balance'] += amount
-
-    accounts[sender]['transactions'].append({'type': 'to',
-                                             'who': receiver,
-                                             'amount': amount})
-    accounts[receiver]['transactions'].append({'type': 'from',
-                                               'who': sender,
-                                               'amount': amount})
-
-
-@app.route('/logout')
+@app.route('/logout', methods=['GET'])
 def logout():
+    user_id = utils.check_session(request, mysql)
+    if user_id and not db.delete_session(mysql, user_id):
+        return render_template("Problem while deleting data. Please contact an administrator.")
+
     return redirect(url_for('index'))
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     # 0. check session
     user_id = utils.check_session(request, mysql)
@@ -99,7 +103,7 @@ def account():
     return account_bank.handle_view(mysql, user_id)
 
 
-@app.route('/help')
+@app.route('/help', methods=['GET'])
 def help():
     return render_template('help.html')
 
