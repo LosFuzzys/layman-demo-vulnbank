@@ -158,7 +158,7 @@ def get_user_balance_list(mysql, user_id):
         cur = mysql.connection.cursor()
 
         print("before get user balance list sql query", flush=True)
-        cur.execute("SELECT user, balance FROM users WHERE id!=%s;", (str(user_id), ))
+        cur.execute("SELECT user, balance FROM users WHERE id!=%s ORDER BY balance DESC;", (str(user_id), ))
         print("after  get user balance list sql query", flush=True)
 
         result = cur.fetchall()
