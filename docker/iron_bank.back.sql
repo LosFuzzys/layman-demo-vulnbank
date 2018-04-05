@@ -52,7 +52,7 @@ CREATE TABLE `users` (
   `pwd` varchar(100) NOT NULL,
   `balance` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,7 +61,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'jsnow','9123bba91a3c075f6574338d9b8e8ca1b7bd79bbdb330a7c11869f90bfb644fc',100),(2,'dstormborn','616abe0ffa07f4bbfe040c1b1b21663e54f57c40fecfc86a0c2f001c050ab14a',100),(3,'ghost','ead6ef03d61ee60c533d6d450c50a1e559a8a37f6b796a4094cd0dac6b744428',100);
+INSERT INTO `users` VALUES (1,'jsnow','9123bba91a3c075f6574338d9b8e8ca1b7bd79bbdb330a7c11869f90bfb644fc',100),(2,'dstormborn','616abe0ffa07f4bbfe040c1b1b21663e54f57c40fecfc86a0c2f001c050ab14a',100);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -74,4 +74,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-05 10:56:25
+-- Dump completed on 2018-04-04 20:18:17
