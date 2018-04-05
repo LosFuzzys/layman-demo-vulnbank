@@ -10,14 +10,36 @@
 
 <h3 class="sub-header">Account Balance: {{ user['balance'] }} $</h3>
 
+<form action="" method="post" class="form-transfer">
 
-<p>
-  <a class="btn btn-lg btn-primary"
-     href="{{ url_for('transfer_moneyz', username=username) }}"
-     role="button">
-     Transfer Money
-  </a>
-</p>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">@</span>
+        <input type="text" class="form-control" placeholder="Username"
+               aria-describedby="basic-addon1" name="to">
+    </div>
+
+    <div class="input-group">
+        <span class="input-group-addon">$</span>
+        <input type="text" class="form-control"
+               placeholder="Amount"
+               aria-label="Amount (to the nearest dollar)"
+               name="amount">
+        <span class="input-group-addon">.00</span>
+    </div>
+
+    <div class="input-group">
+        <input type=submit value="Transfer money"
+               class="btn btn-lg btn-primary btn-block" />
+    </div>
+</form>
+
+{#<p>#}
+{#  <a class="btn btn-lg btn-primary"#}
+{#     href="{{ url_for('transfer_moneyz', username=username) }}"#}
+{#     role="button">#}
+{#     Transfer Money#}
+{#  </a>#}
+{#</p>#}
 
 <h2 class="sub-header">Other Users</h2>
 <div class="table-responsive">

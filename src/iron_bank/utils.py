@@ -104,3 +104,32 @@ def generate_cookie(id, token):
 
     cookie = b64e(json.dumps(cookie_dict).encode('utf-8'))
     return cookie
+
+
+def get_user_account_dict(mysql, user_id):
+    # 0. check input
+    if user_id is None or mysql is None:
+        return None
+
+    # 1. get user
+    user = db.get_user(mysql, user_id)
+    if user is None:
+        return None
+
+    # 2. get balance
+    balance = db.get_balance(mysql, user)
+    if balance is None:
+        return None
+
+    # 3. get other users
+    user_list = db.get_user_balance_list(mysql, id)
+    print("user_list from db: ", user_list)
+    if user_list is None:
+        return None
+
+    user_dict = dict()
+    user_dict['name'] = user
+    user_dict['balance'] = balance
+    user_dict['user_list'] = user_list
+
+    return user_dict

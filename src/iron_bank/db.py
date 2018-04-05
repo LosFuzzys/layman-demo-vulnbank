@@ -132,6 +132,27 @@ def get_user_id(mysql, user):
         return None
 
 
+def get_user(mysql, user_id):
+    try:
+        cur = mysql.connection.cursor()
+
+        print("before get user_sql query", flush=True)
+        cur.execute("SELECT user FROM users WHERE id=%s;", (str(user_id), ))
+        print("after  get user sql query", flush=True)
+
+        # castle approach: there has to be only one user with that name
+        num_rows = cur.rowcount
+        if num_rows != 1:
+            return None
+
+        result = cur.fetchone()
+        user = result[0]
+        return user
+    except Exception as e:
+        print(e, flush=True)
+        return None
+
+
 def get_user_balance_list(mysql, user_id):
     try:
         cur = mysql.connection.cursor()

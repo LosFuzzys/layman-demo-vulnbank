@@ -1,6 +1,6 @@
 # flask & general app stuff
 from flask import current_app, render_template, Markup, make_response
-from iron_bank import account, db, utils
+from iron_bank import account_bank, db, utils
 
 
 def provide_form(msg=""):
@@ -50,40 +50,25 @@ def handle(request, mysql):
         return provide_form("Problem while checking the data. Please contact an administrator.")
 
     # 2. craft session cookie
-    token = utils.generate_session_token()
-
     #   a. delete previous session token in DB (if one exists)
     if not db.delete_session(mysql, id):
         return provide_form("Problem while storing data. Please contact an administrator.")
 
-    #   b. create session token in DB
+    #   b. create session token
+    token = utils.generate_session_token()
     if not db.create_session(mysql, id, token):
         return provide_form("Problem while storing data. Please contact an administrator.")
 
-    # 3. get user's balance
-    balance = db.get_balance(mysql, user)
-    if balance is None:
-        return provide_form("Problem while getting data. Please contact an administrator.")
-
-    # 4. get other users
-
-    #[{'user': 'jsnowddd', 'balance': 100}, {'user': 'dstormbornbbb', 'balance': 100}]
-    user_list = db.get_user_balance_list(mysql, id)
-    print("user_list from db: ", user_list)
-    if user_list is None:
-        return provide_form("Problem while getting data. Please contact an administrator.")
-
-    user_dict = dict()
-    user_dict['name'] = user
-    user_dict['balance'] = balance
-    user_dict['user_list'] = user_list
-
     cookie = utils.generate_cookie(id, token)
 
-    # 3. navigate to account page
-    response = make_response(account.provide_form(account=user_dict))
+    # 3. get user dict
+    user_dict = utils.get_user_account_dict(mysql, id)
+    if user_dict is None:
+        return provide_form("Problem while getting data. Please contact an administrator.")
+
+    # 4. navigate to account page
+    response = make_response(account_bank.provide_form_overview(account=user_dict))
     response.set_cookie(current_app.config['COOKIE_NAME'], cookie, httponly=True)
 
     return response
-
 

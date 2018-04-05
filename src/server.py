@@ -5,7 +5,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_mysqldb import MySQL
-from iron_bank import registration, login_bank
+from iron_bank import registration, login_bank, account_bank, utils
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -82,40 +82,16 @@ def login():
 
 @app.route('/account', methods=['GET', 'POST'])
 def account():
-    error = None
+    # 0. check session
+    user_id = utils.check_session(request, mysql)
+    if user_id is None:
+        return redirect(url_for('login'))
+
+    # 1. handle request
     if request.method == "POST":
-        if request.form['user'] and request.form['user'] in accounts:
-            user = request.form['user']
-            return redirect(url_for("account_status", username=user))
-        else:
-            error = "Invalid Username or Password"
+        return account_bank.handle_transfer(request, mysql, user_id)
 
-    return render_template('login.html', error=error)
-
-
-@app.route('/account/<username>')
-def account_status(username):
-    return render_template('account.html',
-                           user=accounts[username],
-                           username=username)
-
-
-@app.route('/account/<username>/transfer', methods=['GET', 'POST'])
-def transfer_moneyz(username):
-    if request.method == 'GET':
-        return render_template('transfer.html', username=username)
-    else:
-        toUser = request.form['to']
-        amount = int(request.form['amount'])
-
-        if toUser not in accounts:
-            # TODO: error
-            error = "no such user '{}'".format(toUser)
-            return render_template('transfer.html', error=error)
-
-        perform_transaction(username, toUser, amount)
-
-        return redirect(url_for("account_status", username=username))
+    return account_bank.handle_view(mysql, user_id)
 
 
 @app.route('/help')
