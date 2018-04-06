@@ -9,5 +9,6 @@ RUN pip3 install --no-cache-dir -r /requirements.txt
 RUN useradd -m -d /home/iron_bank -b /bin/bash iron_bank 
 USER iron_bank 
 
-CMD ["python3", "/src/server.py"]
+#CMD ["python3", "/src/server.py"]
+CMD ["sh", "/src/startapp.sh"]
 
